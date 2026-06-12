@@ -1,0 +1,45 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+.Python
+.venv/
+venv/
+env/
+
+# Secrets
+.env
+.env.*
+*.pem
+credentials.json
+*_credentials*
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Ultralytics / caches
+*.cache
+.cache/
+wandb/
+
+# Large temp (keep trained weights and runs)
+*.tmp
+
+# Training artifacts (keep best.pt, results, summary plots)
+runs/**/weights/last.pt
+runs/**/weights/*_openvino_model/
+runs/**/weights/*_int8_openvino_model/
+runs/**/train_batch*.jpg
+runs/**/val_batch*.jpg
+runs/obb/
+runs/benchmark_aerial/*.json
+!runs/benchmark_aerial/summary.json
+runs/benchmark_gpu/
+runs/test_turbo/
+runs/test_14_A1/
+*.onnx
+*.engine

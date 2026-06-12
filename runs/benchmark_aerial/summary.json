@@ -1,0 +1,35 @@
+[
+  {
+    "name": "two_stage_pt",
+    "count": 550,
+    "elapsed_s": 96.0,
+    "coarse_tiles": 238,
+    "fine_tiles": 226,
+    "total_tiles": 464,
+    "read_ms": 4052.5,
+    "infer_ms": 91227.6,
+    "merge_ms": 33.7
+  },
+  {
+    "name": "batch_fullscan_pt",
+    "count": 587,
+    "elapsed_s": 237.5,
+    "coarse_tiles": 0,
+    "fine_tiles": 1428,
+    "total_tiles": 1428,
+    "read_ms": 9631.9,
+    "infer_ms": 227072.5,
+    "merge_ms": 47.0
+  },
+  {
+    "name": "two_stage_openvino",
+    "count": 551,
+    "elapsed_s": 13.7,
+    "coarse_tiles": 238,
+    "fine_tiles": 226,
+    "total_tiles": 464,
+    "read_ms": 2249.9,
+    "infer_ms": 10961.2,
+    "merge_ms": 64.1
+  }
+]
