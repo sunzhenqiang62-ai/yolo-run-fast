@@ -43,3 +43,11 @@ runs/test_turbo/
 runs/test_14_A1/
 *.onnx
 *.engine
+
+# C++ build & fetched ORT headers (regenerated via cpp/setup_onnxruntime_headers.sh)
+cpp/build/
+cpp/third_party/
+
+# Benchmark artifacts
+big_test.tif
+runs/bench/
