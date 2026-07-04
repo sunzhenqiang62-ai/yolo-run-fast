@@ -241,6 +241,9 @@ python benchmark_aerial.py
 ├── predict_aerial.py        # 大图航拍分块 OBB 推理（two-stage / GPU turbo / OpenVINO）
 ├── benchmark_aerial.py      # 航拍速度 benchmark（CPU）
 ├── benchmark_gpu.py         # GPU 优化 benchmark
+├── scripts/export_onnx.py   # 导出 C++ 用 ONNX 模型
+├── cpp/                     # C++ ONNX Runtime 航拍推理（Linux + Windows）
+├── packaging/windows/       # Windows 构建与打包脚本
 ├── zhuangji.yaml            # 数据集配置
 ├── requirements.txt
 ├── yolo26n-obb.pt           # 预训练 OBB 权重
@@ -250,6 +253,42 @@ python benchmark_aerial.py
 ├── runs/zhuangji_obb_gpu/   # GPU 微调
 └── runs/benchmark_aerial/   # 航拍 benchmark 汇总
 ```
+
+## Windows 构建与打包
+
+C++ 推理 CLI（`aerial_obb`）可在 Windows 上编译，并打包为便携 zip。
+
+**前置条件**（首次需安装，可用 winget）：
+
+```powershell
+winget install Kitware.CMake
+winget install Microsoft.VisualStudio.2022.BuildTools
+# 安装时勾选「使用 C++ 的桌面开发 / VC Tools」
+pip install onnxruntime   # 可选，Python 侧 ORT
+```
+
+**一键构建 + 打包**：
+
+```powershell
+.\packaging\windows\build.ps1      # 下载 ORT/OpenCV 依赖并编译
+.\scripts\export_onnx.py           # 若尚无 best.onnx
+.\packaging\windows\package.ps1    # 生成 dist\zhuangji-aerial-win64\ 与 zip
+```
+
+**运行便携包**：
+
+```powershell
+cd dist\zhuangji-aerial-win64
+.\aerial_obb.bat -i C:\path\to\large.tif --json out\result.json --profile
+```
+
+产物路径：
+
+- 可执行文件：`cpp/build/Release/aerial_obb.exe`
+- 便携包目录：`dist/zhuangji-aerial-win64/`
+- 压缩包：`dist/zhuangji-aerial-win64-v1.0.0.zip`
+
+可选：安装 [Inno Setup 6](https://jrsoftware.org/isinfo.php) 后运行 `ISCC packaging\windows\installer.iss` 生成 `.exe` 安装程序。
 
 ## License
 

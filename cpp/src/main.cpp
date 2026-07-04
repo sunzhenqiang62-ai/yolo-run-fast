@@ -4,32 +4,29 @@
 #include <iostream>
 #include <string>
 
+#ifndef _WIN32
 #include <unistd.h>
+#endif
 
 #include "pipeline.hpp"
 
 namespace {
 
-// The ORT CUDA execution provider is dlopen'd at runtime, and its own
-// dependencies (libcublasLt.so.12, libcudnn*.so.9, ...) ship inside the venv's
-// nvidia-*-cu12 pip packages. DT_RPATH on this executable is NOT consulted when
-// the loader resolves a dlopen'd library's dependencies, so we must put those
-// dirs on LD_LIBRARY_PATH. To stay self-contained (no wrapper script, no venv
-// edits, no manual env), re-exec ourselves exactly once with LD_LIBRARY_PATH
-// prepended. ORT_RUNTIME_LIB_PATH is baked in by CMake from the venv layout.
+#if !defined(_WIN32) && defined(ORT_RUNTIME_LIB_PATH)
+// Linux ORT-CUDA: dlopen'd provider deps live in the venv nvidia-*-cu12 libs.
+// Re-exec once with LD_LIBRARY_PATH so CUDA EP can load without a wrapper script.
 void ensure_runtime_lib_path(char** argv) {
-#ifdef ORT_RUNTIME_LIB_PATH
-    if (std::getenv("AERIAL_OBB_REEXEC")) return;  // already re-exec'd
+    if (std::getenv("AERIAL_OBB_REEXEC")) return;
     const char* cur = std::getenv("LD_LIBRARY_PATH");
     std::string want = ORT_RUNTIME_LIB_PATH;
     std::string merged = cur && *cur ? want + ":" + cur : want;
     setenv("LD_LIBRARY_PATH", merged.c_str(), 1);
     setenv("AERIAL_OBB_REEXEC", "1", 1);
     execv("/proc/self/exe", argv);
-    // If execv fails we fall through and run anyway (GPU may then fall back).
-#endif
-    (void)argv;
 }
+#else
+void ensure_runtime_lib_path(char** argv) { (void)argv; }
+#endif
 
 }  // namespace
 

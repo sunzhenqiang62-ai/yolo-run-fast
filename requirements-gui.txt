@@ -1,0 +1,2 @@
+# Optional GUI preview (JPEG in tkinter). Core GUI uses stdlib tkinter only.
+Pillow>=10.0.0

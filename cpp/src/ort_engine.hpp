@@ -10,6 +10,7 @@
 
 #include <array>
 #include <cstdint>
+#include <filesystem>
 #include <iostream>
 #include <stdexcept>
 #include <string>
@@ -51,7 +52,12 @@ public:
             provider_ = "cpu";
         }
 
+#ifdef _WIN32
+        const std::wstring model_w = std::filesystem::path(model_path).wstring();
+        session_ = Ort::Session(env_, model_w.c_str(), opts);
+#else
         session_ = Ort::Session(env_, model_path.c_str(), opts);
+#endif
 
         Ort::AllocatorWithDefaultOptions alloc;
         in_name_ = session_.GetInputNameAllocated(0, alloc).get();
